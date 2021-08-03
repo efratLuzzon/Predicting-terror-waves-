@@ -9,6 +9,9 @@ class QueriesI(Interface):
     def get_model_data():
         """get data to train the model"""
 
+    def get_model_data_per_date(date):
+        """get model data per date"""
+
     def get_num_attacks_per_day():
         """get num attacks for each day"""
 

@@ -8,7 +8,7 @@ class DBI(Interface):
     def __disconnect__():
         """disconnect from DB"""
 
-    def fetch(query):
+    def fetch(query, params):
         """fetch a query"""
 
     def load_df(df, df_name):

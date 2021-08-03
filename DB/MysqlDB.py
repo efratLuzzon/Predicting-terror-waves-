@@ -26,9 +26,9 @@ class MysqlDB():
     def __disconnect__(self):
         self.__con.close()
 
-    def fetch(self, query):
+    def fetch(self, query, params=None):
         self.__connect__()
-        self.__cur.execute(query)
+        self.__cur.execute(query, params)
         result = self.__cur.fetchall()
         self.__disconnect__()
         return result

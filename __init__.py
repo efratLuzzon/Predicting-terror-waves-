@@ -43,6 +43,16 @@ class ModelDataApi(Resource):
         except Exception as e:
             return Response(status=404)
 
+    def get(self, date):
+        error = ''
+        try:
+            result = db_queries.get_model_data_per_date(date)
+            resp = jsonify(result)
+            resp.status_code = 200
+            return resp
+        except Exception as e:
+            return Response(status=404)
+
 
 class AnomaliesApi(Resource):
     def get(self):
