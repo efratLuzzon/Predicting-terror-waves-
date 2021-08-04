@@ -8,7 +8,7 @@ from DB.DB_I import DBI
 class MysqlDB():
     def __init__(self):
         self.__host = "localhost"
-        self.__user = "efrat"
+        self.__user = "root"
         self.__password = "root"
         self.__db = "terror_db"
         self.__con_string = 'mysql+mysqldb://' + self.__user + ':' + self.__password + '@' + self.__host + ':3306/' \

@@ -197,6 +197,107 @@ class UploadCsv(Resource):
             return Response(status=404)
 
 
+class WeatherApi(Resource):
+    def get(self):
+        try:
+            start_date = request.args.get('startDate')
+            end_date = request.args.get('endDate')
+            result = db_queries.get_weather_between_dates(start_date, end_date)
+            resp = jsonify(result)
+            resp.status_code = 200
+            return resp
+        except Exception as e:
+            return Response(status=404)
+
+
+class AttacksApi(Resource):
+    def get(self):
+        try:
+            start_date = request.args.get('startDate')
+            end_date = request.args.get('endDate')
+            result = db_queries.get_attacks_between_dates(start_date, end_date)
+            resp = jsonify(result)
+            resp.status_code = 200
+            return resp
+        except Exception as e:
+            return Response(status=404)
+
+
+class GoogleTrendsIsraelApi(Resource):
+    def get(self):
+        try:
+            start_date = request.args.get('startDate')
+            end_date = request.args.get('endDate')
+            result = db_queries.get_google_trends_israel_between_dates(start_date, end_date)
+            resp = jsonify(result)
+            resp.status_code = 200
+            return resp
+        except Exception as e:
+            return Response(status=404)
+
+
+class GoogleTrendsPalestineApi(Resource):
+    def get(self):
+        try:
+            start_date = request.args.get('startDate')
+            end_date = request.args.get('endDate')
+            result = db_queries.get_google_trends_palestine_between_dates(start_date, end_date)
+            resp = jsonify(result)
+            resp.status_code = 200
+            return resp
+        except Exception as e:
+            return Response(status=404)
+
+
+class ElectionsApi(Resource):
+    def get(self):
+        try:
+            start_date = request.args.get('startDate')
+            end_date = request.args.get('endDate')
+            result = db_queries.get_elections_date_between_dates(start_date, end_date)
+            resp = jsonify(result)
+            resp.status_code = 200
+            return resp
+        except Exception as e:
+            return Response(status=404)
+
+
+class HolidaysApi(Resource):
+    def get(self):
+        try:
+            start_date = request.args.get('startDate')
+            end_date = request.args.get('endDate')
+            result = db_queries.get_holidays_between_dates(start_date, end_date)
+            resp = jsonify(result)
+            resp.status_code = 200
+            return resp
+        except Exception as e:
+            return Response(status=404)
+
+
+class AttacksInfoApi(Resource):
+    def get(self):
+        try:
+            date = request.args.get('date')
+            result = db_queries.get_attacks_info_by_date(date)
+            resp = jsonify(result)
+            resp.status_code = 200
+            return resp
+        except Exception as e:
+            return Response(status=404)
+
+
+class ModelPredictionsApi(Resource):
+    def get(self):
+        try:
+            result = db_queries.get_model_predictions()
+            resp = jsonify(result)
+            resp.status_code = 200
+            return resp
+        except Exception as e:
+            return Response(status=404)
+
+
 # Setup the Api resource routing
 api.add_resource(LoginApi, '/Login')
 api.add_resource(ModelDataApi, '/ModelData')
@@ -208,6 +309,15 @@ api.add_resource(HyperparmetersApi, '/Hyperparmeters')
 api.add_resource(FeaturesApi, '/Features')
 api.add_resource(UploadCsv, '/Uploadcsv')
 api.add_resource(TestApi, '/Anomalies')
+api.add_resource(WeatherApi, '/Weather')
+api.add_resource(AttacksApi, '/Attacks')
+api.add_resource(GoogleTrendsIsraelApi, '/GoogleTrendsIsrael')
+api.add_resource(GoogleTrendsPalestineApi, '/GoogleTrendsPalestine')
+api.add_resource(ElectionsApi, '/Elections')
+api.add_resource(HolidaysApi, '/Holidays')
+api.add_resource(AttacksInfoApi, '/AttacksInfo')
+api.add_resource(ModelPredictionsApi, '/ModelPredictions')
+
 
 if __name__ == "__main__":
     app.run()

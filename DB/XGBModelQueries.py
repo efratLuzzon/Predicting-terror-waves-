@@ -75,3 +75,56 @@ class XGBModelQueries():
         """get features score for trained model by year"""
         result = self.__db_connection.fetch("SELECT * FROM features")
         return result
+
+    def get_weather_between_dates(self, start_date, end_date):
+        """get weather data between two dates"""
+        query = "SELECT * FROM israel_weather WHERE date between %s and %s"
+        result = self.__db_connection.fetch(query, (start_date, end_date,))
+        return result
+
+    def get_attacks_between_dates(self, start_date, end_date):
+        """get attacks data between two dates"""
+        query = "SELECT date, num_attack, num_wounded, num_deaths FROM gtd WHERE date between %s and %s"
+        result = self.__db_connection.fetch(query, (start_date, end_date,))
+        return result
+
+    def get_google_trends_israel_between_dates(self, start_date, end_date):
+        """get google trends israel data between two dates"""
+        query = "SELECT * FROM google_trends_israel WHERE date between %s and %s"
+        result = self.__db_connection.fetch(query, (start_date, end_date,))
+        return result
+
+    def get_google_trends_palestine_between_dates(self, start_date, end_date):
+        """get google trends palestine data between two dates"""
+        query = "SELECT * FROM google_trends_palestine WHERE date between %s and %s"
+        result = self.__db_connection.fetch(query, (start_date, end_date,))
+        return result
+
+    def get_elections_date_between_dates(self, start_date, end_date):
+        """get elections date between two dates"""
+        query = "SELECT * FROM elections WHERE date between %s and %s"
+        result = self.__db_connection.fetch(query, (start_date, end_date,))
+        return result
+
+    def get_holidays_between_dates(self, start_date, end_date):
+        """get holidays data between two dates"""
+        query = "SELECT * FROM muslim_holidays " \
+                "INNER JOIN jewish_holidays using(date) " \
+                "INNER JOIN chris_holidays using(date) " \
+                "WHERE date between %s and %s"
+        result = self.__db_connection.fetch(query, (start_date, end_date,))
+        return result
+
+    # No table yet
+    def get_attacks_info_by_date(self, date):
+        """get attacks information by date"""
+        query = "SELECT city, summary, nkill, nwound FROM attacks_info WHERE date = %s"
+        result = self.__db_connection.fetch(query, (date,))
+        return result
+
+    # No table yet
+    def get_model_predictions(self):
+        """get model predictions"""
+        query = "SELECT date FROM prediction WHERE prediction = 1"
+        result = self.__db_connection.fetch(query)
+        return result
