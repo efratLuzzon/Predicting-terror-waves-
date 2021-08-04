@@ -181,13 +181,6 @@ class ConfusionMatrix(Resource):
         except Exception as e:
             return Response(status=404)
 
-    def post(self):
-        try:
-            requested_file = request.form['pickled_df']
-            df = pickle.loads(base64.b64decode(requested_file.encode()))
-            db_queries.load_data(df, "confusion_matrix")
-        except Exception as e:
-            return Response(status=404)
 
 
 class HyperparmetersApi(Resource):
@@ -201,13 +194,6 @@ class HyperparmetersApi(Resource):
         except Exception as e:
             return Response(status=404)
 
-    def post(self):
-        try:
-            requested_file = request.form['pickled_df']
-            df = pickle.loads(base64.b64decode(requested_file.encode()))
-            db_queries.load_data(df, "hyperparameters")
-        except Exception as e:
-            return Response(status=404)
 
 
 class FeaturesApi(Resource):
@@ -221,13 +207,7 @@ class FeaturesApi(Resource):
         except Exception as e:
             return Response(status=404)
 
-    def post(self):
-        try:
-            requested_file = request.form['pickled_df']
-            df = pickle.loads(base64.b64decode(requested_file.encode()))
-            db_queries.load_data(df, "features_importance")
-        except Exception as e:
-            return Response(status=404)
+
 
 
 class TestApi(Resource):
