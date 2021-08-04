@@ -32,3 +32,27 @@ class QueriesI(Interface):
 
     def get_features(year):
         """get features score for trained model by year"""
+
+    def get_weather_between_dates(self, start_date, end_date):
+        """get weather data between two dates"""
+
+    def get_attacks_between_dates(self, start_date, end_date):
+        """get attacks data between two dates"""
+
+    def get_google_trends_israel_between_dates(self, start_date, end_date):
+        """get google trends israel data between two dates"""
+
+    def get_google_trends_palestine_between_dates(self, start_date, end_date):
+        """get google trends palestine data between two dates"""
+
+    def get_elections_date_between_dates(self, start_date, end_date):
+        """get elections date between two dates"""
+
+    def get_holidays_between_dates(self, start_date, end_date):
+        """get holidays data between two dates"""
+
+    def get_attacks_info_by_date(self, date):
+        """get attacks information by date"""
+
+    def get_model_predictions(self):
+        """get model predictions"""

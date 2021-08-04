@@ -3,7 +3,7 @@ import glob
 import pandas as pd
 from DataFrameCalender import DataFrameCalender
 from Definition import GTD
-from DB_Scripts.TerrorData import TerrorAttackData
+from DB.DB_Scripts.TerrorData import TerrorAttackData
 
 
 def write_default_values_google_trends(indicative_words, prefix_column, path_write_file):
