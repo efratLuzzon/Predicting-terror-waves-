@@ -4,6 +4,8 @@ import pandas as pd
 import torch as torch
 from pandas import np
 from sklearn.preprocessing import MinMaxScaler
+
+from DataFrameCalender import DataFrameCalender
 from ML_Models.Anomaly_detection.DeepAnT import DeepAnTModel
 from Definition import DEEP_ANT
 
@@ -137,18 +139,19 @@ class AnomalyDetectionTimeSeries():
             start_wave += delta
         return loss_df
 
-    def classify_data(self, loss_df):
+    def find_waves_date(self, loss_df):
         loss_df["class"] = 0
-        days = []
-
+        start_waves = []
+        end_waves = []
+        DataFrameCalender.set_date_time_index(loss_df, "date", loss_df["date"])
         in_wave = False
         start_counr_end = False
         counter = 0
         start_wave = None
         end_wave = None
         for day in loss_df.iterrows():
-            loss = day[1][0]
-            timestamp = day[1][1]
+            loss = day[1][1]
+            timestamp = day[1][0]
             if (loss > 0.1):
                 # start wave if didnt start
                 if not in_wave:
@@ -173,12 +176,12 @@ class AnomalyDetectionTimeSeries():
                         if start_wave < end_wave - timedelta(days=21):
                             loss_df = self.update(loss_df, start_wave, end_wave)
                             print(str(start_wave.date()) + " - " + str(end_wave.date()))
-                            days.append(start_wave.date())
-                            days.append(end_wave.date())
+                            start_waves.append(start_wave.date())
+                            end_waves.append(end_wave.date())
                         in_wave = False
                         end_wave = None
                         counter = 0
                         start_counr_end = False
-        days_df = pd.DataFrame(days, columns=["result"])
-        days_df = pd.to_datetime(days_df["result"])
-        return days_df
+        days_df = pd.DataFrame(data=start_waves, columns=["start_wave"])
+        days_df["end_wave"] = end_waves
+        return days_df, loss_df

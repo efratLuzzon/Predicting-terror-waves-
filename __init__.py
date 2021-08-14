@@ -11,8 +11,6 @@ from ML_Models.XgbClassification import XgbClassification
 
 app = Flask(__name__)
 api = Api(app)
-# DB = my_dql_db()
-
 db_queries = XGBModelQueries()
 
 
@@ -118,6 +116,7 @@ class AnomaliesApi(Resource):
                 DataFrameCalender.set_date_time_index(result, "date", result["date"])
                 anomaly_detection = AnomalyDetectionTimeSeries(result)
                 loss_df = anomaly_detection.get_score()
+                waves, loss_df = anomaly_detection.find_waves_date(loss_df)
                 db_queries.load_data(loss_df, "annomaly_detection")
                 resp = jsonify("")
                 resp.status_code = 200
@@ -127,10 +126,6 @@ class AnomaliesApi(Resource):
         except Exception as e:
             return Response(status=404)
 
-
-class TrainModelApi(Resource):
-    def post(self):
-        resp = db_queries.load_data()
 
 
 class ModelDateResultApi(Resource):
@@ -151,6 +146,11 @@ class ModelDateResultApi(Resource):
             if len(data) is not 0:
                 DataFrameCalender.set_date_time_index(data, "date", data["date"])
                 data.drop('date', axis='columns', inplace=True)
+                class_waves = db_queries.get_real_result_waves()
+                target = [0 for i in range(30)]
+                for c in class_waves:
+                    target.append(c['class'])
+                data["target"] = target
             else:
                 return Response(status=404)
             accuracy, accuracy_mean, xgb_model, predictions = XgbClassification.get_trained_model(data, test_year)
@@ -215,7 +215,7 @@ class TestApi(Resource):
         try:
             requested_file = request.form['pickled_df']
             df = pickle.loads(base64.b64decode(requested_file.encode()))
-            resp = db_queries.load_data(df, "confusion_matrix")
+            resp = db_queries.load_data(df, "annomaly_detection")
         except Exception as e:
             return Response(status=404)
 
@@ -328,12 +328,11 @@ class ModelPredictionsApi(Resource):
 api.add_resource(LoginApi, '/Login')
 api.add_resource(ModelDataApi, '/ModelData')
 api.add_resource(AnomaliesApi, '/Anomalies')
-api.add_resource(TrainModelApi, '/TrainModel')
 api.add_resource(ModelDateResultApi, '/ModelDateResult')
 api.add_resource(ConfusionMatrix, '/ConfusionMatrix')
 api.add_resource(HyperparmetersApi, '/Hyperparmeters')
 api.add_resource(FeaturesApi, '/Features')
-api.add_resource(TestApi, '/Anomalies')
+api.add_resource(TestApi, '/Test')
 api.add_resource(WeatherApi, '/Weather')
 api.add_resource(AttacksApi, '/Attacks')
 api.add_resource(GoogleTrendsIsraelApi, '/GoogleTrendsIsrael')

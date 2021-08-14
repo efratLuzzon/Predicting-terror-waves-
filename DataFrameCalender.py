@@ -23,3 +23,14 @@ class DataFrameCalender:
         data[column_name] = pd.to_datetime(column_to_convert)
         data.index = data[column_name]
         return data
+    @staticmethod
+    def create_empty_dates_per_month(year, month):
+        dates = []
+        c = calendar.Calendar(calendar.SUNDAY)
+        iter_days = c.itermonthdates(int(year), int(month))
+        for day in iter_days:
+            if day.month is not month:
+                continue
+            dates.append(day)
+        dates = pd.DataFrame(dates, columns=['date'])
+        return dates

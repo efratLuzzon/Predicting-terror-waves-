@@ -56,3 +56,6 @@ class QueriesI(Interface):
 
     def get_model_predictions(self):
         """get model predictions"""
+
+    def get_real_result_waves(self):
+        """get real classification for each day"""

@@ -128,3 +128,8 @@ class XGBModelQueries():
         query = "SELECT date FROM prediction WHERE prediction = 1"
         result = self.__db_connection.fetch(query)
         return result
+
+    def get_real_result_waves(self):
+        query = "SELECT class FROM annomaly_detection"
+        result = self.__db_connection.fetch(query)
+        return result

@@ -14,7 +14,8 @@ def update(loss_df, start_wave, end_wave):
 
 def classify_data(loss_df):
     loss_df["class"] = 0
-    days = []
+    start_waves = []
+    end_waves = []
 
     in_wave = False
     start_counr_end = False
@@ -48,14 +49,14 @@ def classify_data(loss_df):
                     if start_wave < end_wave - timedelta(days=21):
                         loss_df = update(loss_df, start_wave, end_wave)
                         print(str(start_wave.date()) + " - " + str(end_wave.date()))
-                        days.append(start_wave.date())
-                        days.append(end_wave.date())
+                        start_waves.append(start_wave.date())
+                        end_waves.append(end_wave.date())
                     in_wave = False
                     end_wave = None
                     counter = 0
                     start_counr_end = False
-    days_df = pd.DataFrame(days, columns=["result"])
-    days_df = pd.to_datetime(days_df["result"])
+    days_df = pd.DataFrame(data=start_waves, columns=["start_wave"])
+    days_df["end_wave"] = end_waves
     return days_df
 
 
