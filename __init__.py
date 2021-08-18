@@ -215,7 +215,7 @@ class TestApi(Resource):
         try:
             requested_file = request.form['pickled_df']
             df = pickle.loads(base64.b64decode(requested_file.encode()))
-            resp = db_queries.load_data(df, "annomaly_detection")
+            resp = db_queries.load_data(df, "terror_wave_details")
         except Exception as e:
             return Response(status=404)
 
