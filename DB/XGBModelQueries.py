@@ -103,7 +103,7 @@ class XGBModelQueries():
 
     def get_elections_date_between_dates(self, start_date, end_date):
         """get elections date between two dates"""
-        query = "SELECT * FROM elections WHERE date between %s and %s"
+        query = "SELECT date FROM elections WHERE date between %s and %s and is_election = 1"
         result = self.__db_connection.fetch(query, (start_date, end_date,))
         return result
 
@@ -116,10 +116,9 @@ class XGBModelQueries():
         result = self.__db_connection.fetch(query, (start_date, end_date,))
         return result
 
-    # No table yet
     def get_attacks_info_by_date(self, date):
         """get attacks information by date"""
-        query = "SELECT city, summary, nkill, nwound FROM attacks_info WHERE date = %s"
+        query = "SELECT city, nwound, ndeath, summary FROM attacks_info WHERE date = %s"
         result = self.__db_connection.fetch(query, (date,))
         return result
 
