@@ -73,7 +73,8 @@ class XGBModelQueries():
 
     def get_features(self, year):
         """get features score for trained model by year"""
-        result = self.__db_connection.fetch("SELECT * FROM features")
+        query = "SELECT * FROM features WHERE year=%s"
+        result = self.__db_connection.fetch(query, (year,))
         return result
 
     def get_weather_between_dates(self, start_date, end_date):

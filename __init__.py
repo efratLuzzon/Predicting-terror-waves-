@@ -31,28 +31,18 @@ class LoginApi(Resource):
             return Response(status=404)
 
 
-
-
 class ModelDataApi(Resource):
     def get(self):
         error = ''
         try:
-            result = db_queries.get_model_data()
+            year = request.args.get("year")
+            result = db_queries.get_model_data() if year is "all" else db_queries.get_model_data_per_date(date)
             resp = jsonify(result)
             resp.status_code = 200
             return resp
         except Exception as e:
             return Response(status=404)
 
-    def get(self, date):
-        error = ''
-        try:
-            result = db_queries.get_model_data_per_date(date)
-            resp = jsonify(result)
-            resp.status_code = 200
-            return resp
-        except Exception as e:
-            return Response(status=404)
     def post(self):
         error = ''
         try:
@@ -71,6 +61,7 @@ class ModelDataApi(Resource):
         except Exception as e:
             # return render_template("login.html", error=error)
             return Response(status=404)
+
     def get_table_name(self, name):
         if name.startswith("gtd"):
             return "gtd"
@@ -92,8 +83,6 @@ class ModelDataApi(Resource):
             return "terror_wave_details"
         else:
             return ""
-
-
 
 
 class AnomaliesApi(Resource):
@@ -127,11 +116,11 @@ class AnomaliesApi(Resource):
             return Response(status=404)
 
 
-
 class ModelDateResultApi(Resource):
     def get(self):
         try:
-            result = db_queries.get_model_date_prediction()
+            year = request.args.get("year")
+            result = db_queries.get_model_date_prediction(year)
             resp = jsonify(result)
             resp.status_code = 200
             return resp
@@ -174,40 +163,50 @@ class ConfusionMatrix(Resource):
     def get(self):
         error = ''
         try:
-            result = db_queries.get_confusion_matrix()
+            year = request.args.get("year")
+            result = db_queries.get_confusion_matrix(year)
             resp = jsonify(result)
             resp.status_code = 200
             return resp
         except Exception as e:
             return Response(status=404)
-
 
 
 class HyperparmetersApi(Resource):
     def get(self):
         error = ''
         try:
-            result = db_queries.get_hyperparameters()
+            year = request.args.get("year")
+            result = db_queries.get_hyperparameters(year)
             resp = jsonify(result)
             resp.status_code = 200
             return resp
         except Exception as e:
             return Response(status=404)
-
 
 
 class FeaturesApi(Resource):
     def get(self):
         error = ''
         try:
-            result = db_queries.get_features()
+            year = request.args.get("year")
+            result = db_queries.get_features(year)
+            features = pd.DataFrame(result).loc[0].drop("year")
+            map_score = {}
+            for _, (indx, val) in enumerate(features.iteritems()):
+                feature = indx.split("(")[0]
+                if feature in map_score:
+                    map_score[feature] += val
+                else:
+                    map_score[feature] = val
+            sum_score = sum(map_score.values())
+            for f, v in map_score.items():
+                map_score[f] = (v / sum_score) * 100
             resp = jsonify(result)
             resp.status_code = 200
             return resp
         except Exception as e:
             return Response(status=404)
-
-
 
 
 class TestApi(Resource):
@@ -220,7 +219,15 @@ class TestApi(Resource):
             return Response(status=404)
 
 
-
+class UploadFilesApi(Resource):
+    def post(self):
+        try:
+            requested_file = request.form['pickled_df']
+            #   table_name = request.form['table_name']
+            df = pickle.loads(base64.b64decode(requested_file.encode()))
+        # resp = db_queries.load_data(df, table_name)
+        except Exception as e:
+            return Response(status=404)
 
 
 class WeatherApi(Resource):
@@ -316,7 +323,8 @@ class AttacksInfoApi(Resource):
 class ModelPredictionsApi(Resource):
     def get(self):
         try:
-            result = db_queries.get_model_predictions()
+            year = request.args.get('year')
+            result = db_queries.get_model_predictions(year)
             resp = jsonify(result)
             resp.status_code = 200
             return resp
@@ -333,6 +341,7 @@ api.add_resource(ConfusionMatrix, '/ConfusionMatrix')
 api.add_resource(HyperparmetersApi, '/Hyperparmeters')
 api.add_resource(FeaturesApi, '/Features')
 api.add_resource(TestApi, '/Test')
+api.add_resource(UploadFilesApi, '/UploadFiles')
 api.add_resource(WeatherApi, '/Weather')
 api.add_resource(AttacksApi, '/Attacks')
 api.add_resource(GoogleTrendsIsraelApi, '/GoogleTrendsIsrael')
@@ -341,7 +350,6 @@ api.add_resource(ElectionsApi, '/Elections')
 api.add_resource(HolidaysApi, '/Holidays')
 api.add_resource(AttacksInfoApi, '/AttacksInfo')
 api.add_resource(ModelPredictionsApi, '/ModelPredictions')
-
 
 if __name__ == "__main__":
     app.run()
