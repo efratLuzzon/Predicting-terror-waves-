@@ -40,6 +40,10 @@ class XGBModelQueries():
         result = self.__db_connection.fetch(query, (date,))
         return result
 
+    def get_model_accuracy(self, year):
+        query = "SELECT model_accuracy, test_accuracy FROM accuracy WHERE year=%s"
+        result = self.__db_connection.fetch(query, (year,))
+        return result
 
     def get_num_attacks_per_day(self):
         """get num attacks for each day"""
@@ -58,7 +62,8 @@ class XGBModelQueries():
 
     def get_confusion_matrix(self, year):
         """get confusion matrix by year"""
-        result = self.__db_connection.fetch("SELECT * FROM confusion_matrix")
+        query = "SELECT * FROM confusion_matrix WHERE year=%s"
+        result = self.__db_connection.fetch(query, (year,))
         return result
 
     def get_model_date_prediction(self, year):
@@ -68,7 +73,8 @@ class XGBModelQueries():
 
     def get_hyperparameters(self, year):
         """get hyperparams for trained model by year"""
-        result = self.__db_connection.fetch("SELECT * FROM hyperparameters")
+        query = "SELECT * FROM hyperparameters WHERE year=%s"
+        result = self.__db_connection.fetch(query, (year,))
         return result
 
     def get_features(self, year):

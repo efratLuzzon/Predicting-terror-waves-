@@ -12,6 +12,9 @@ class QueriesI(Interface):
     def get_model_data_per_date(date):
         """get model data per date"""
 
+    def get_model_accuracy(year):
+        """get model and test accuracy"""
+
     def get_num_attacks_per_day():
         """get num attacks for each day"""
 

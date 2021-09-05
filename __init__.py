@@ -1,6 +1,8 @@
 import base64
 import os
 import pickle
+from time import sleep
+
 import pandas as pd
 from flask import Flask, request, Response, jsonify
 from flask_restful import Api, Resource
@@ -9,7 +11,10 @@ from DB.XGBModelQueries import XGBModelQueries
 from DataFrameCalender import DataFrameCalender
 from ML_Models.XgbClassification import XgbClassification
 
+
 app = Flask(__name__)
+
+
 api = Api(app)
 db_queries = XGBModelQueries()
 
@@ -36,7 +41,7 @@ class ModelDataApi(Resource):
         error = ''
         try:
             year = request.args.get("year")
-            result = db_queries.get_model_data() if year is "all" else db_queries.get_model_data_per_date(date)
+            result = db_queries.get_model_data() if year is "all" else db_queries.get_model_data_per_date(year)
             resp = jsonify(result)
             resp.status_code = 200
             return resp
@@ -119,11 +124,21 @@ class AnomaliesApi(Resource):
 class ModelDateResultApi(Resource):
     def get(self):
         try:
-            year = request.args.get("year")
-            result = db_queries.get_model_date_prediction(year)
-            resp = jsonify(result)
-            resp.status_code = 200
-            return resp
+            year_prediction = request.args.get("year_prediction")
+            year_acc = request.args.get("year_accuracy")
+            if year_prediction is not None and year_acc is not None:
+                return Response(status=404)
+            elif year_prediction is not None:
+                result = db_queries.get_model_date_prediction(year_prediction)
+                resp = jsonify(result)
+                resp.status_code = 200
+                return resp
+            elif year_acc is not None:
+                result = db_queries.get_model_accuracy(year_acc)
+                resp = jsonify(result)
+                resp.status_code = 200
+                return resp
+            return Response(status=404)
         except Exception as e:
             return Response(status=404)
 
@@ -202,7 +217,9 @@ class FeaturesApi(Resource):
             sum_score = sum(map_score.values())
             for f, v in map_score.items():
                 map_score[f] = (v / sum_score) * 100
-            resp = jsonify(result)
+            map_score = sorted(map_score.items(), key=lambda x: x[1], reverse=True)
+
+            resp = jsonify(map_score[:15])
             resp.status_code = 200
             return resp
         except Exception as e:
@@ -332,6 +349,9 @@ class ModelPredictionsApi(Resource):
             return Response(status=404)
 
 
+
+
+
 # Setup the Api resource routing
 api.add_resource(LoginApi, '/Login')
 api.add_resource(ModelDataApi, '/ModelData')
@@ -352,4 +372,4 @@ api.add_resource(AttacksInfoApi, '/AttacksInfo')
 api.add_resource(ModelPredictionsApi, '/ModelPredictions')
 
 if __name__ == "__main__":
-    app.run()
+    app.run(threaded=True)
