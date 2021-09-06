@@ -348,6 +348,16 @@ class ModelPredictionsApi(Resource):
         except Exception as e:
             return Response(status=404)
 
+class TerrorWavesInfoApi(Resource):
+    def get(self):
+        try:
+            result = db_queries.get_terror_waves_info()
+            resp = jsonify(result)
+            resp.status_code = 200
+            return resp
+        except Exception as e:
+            return Response(status=404)
+
 
 
 
@@ -370,6 +380,7 @@ api.add_resource(ElectionsApi, '/Elections')
 api.add_resource(HolidaysApi, '/Holidays')
 api.add_resource(AttacksInfoApi, '/AttacksInfo')
 api.add_resource(ModelPredictionsApi, '/ModelPredictions')
+api.add_resource(TerrorWavesInfoApi, '/TerrorWavesInfo')
 
 if __name__ == "__main__":
     app.run(threaded=True)
