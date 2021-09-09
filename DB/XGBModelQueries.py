@@ -128,11 +128,10 @@ class XGBModelQueries():
         result = self.__db_connection.fetch(query, (date,))
         return result
 
-    # No table yet
-    def get_model_predictions(self):
+    def get_model_predictions(self, date):
         """get model predictions"""
-        query = "SELECT date FROM prediction WHERE prediction = 1"
-        result = self.__db_connection.fetch(query)
+        query = "SELECT date FROM prediction WHERE date = %s"
+        result = self.__db_connection.fetch(query, (date,))
         return result
 
     def get_real_result_waves(self):

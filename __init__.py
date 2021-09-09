@@ -340,8 +340,8 @@ class AttacksInfoApi(Resource):
 class ModelPredictionsApi(Resource):
     def get(self):
         try:
-            year = request.args.get('year')
-            result = db_queries.get_model_predictions(year)
+            date = request.args.get('date')
+            result = db_queries.get_model_predictions(date)
             resp = jsonify(result)
             resp.status_code = 200
             return resp
@@ -357,9 +357,6 @@ class TerrorWavesInfoApi(Resource):
             return resp
         except Exception as e:
             return Response(status=404)
-
-
-
 
 
 # Setup the Api resource routing
