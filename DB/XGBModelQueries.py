@@ -130,7 +130,7 @@ class XGBModelQueries():
 
     def get_model_predictions(self, date):
         """get model predictions"""
-        query = "SELECT date FROM prediction WHERE date = %s"
+        query = "SELECT prediction FROM prediction WHERE date = %s"
         result = self.__db_connection.fetch(query, (date,))
         return result
 
