@@ -62,3 +62,6 @@ class QueriesI(Interface):
 
     def get_real_result_waves(self):
         """get real classification for each day"""
+
+    def get_terror_waves_info(self):
+        """get terror waves info"""
