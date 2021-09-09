@@ -27,8 +27,8 @@ class QueriesI(Interface):
     def get_confusion_matrix(year):
         """get confusion matrix by year"""
 
-    def get_model_date_prediction(year):
-        """get accuracy and predictions by year"""
+    def get_model_predictions_by_day(date):
+        """get model prediction by day"""
 
     def get_hyperparameters(year):
         """get hyperparams for trained model by year"""

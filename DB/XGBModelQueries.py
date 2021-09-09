@@ -66,11 +66,6 @@ class XGBModelQueries():
         result = self.__db_connection.fetch(query, (year,))
         return result
 
-    def get_model_date_prediction(self, year):
-        """get accuracy and predictions by year"""
-        result = self.__db_connection.fetch("SELECT * FROM accuracy INNER JOIN prediction using(date)")
-        return result
-
     def get_hyperparameters(self, year):
         """get hyperparams for trained model by year"""
         query = "SELECT * FROM hyperparameters WHERE year=%s"
@@ -128,7 +123,13 @@ class XGBModelQueries():
         result = self.__db_connection.fetch(query, (date,))
         return result
 
-    def get_model_predictions(self, date):
+    def get_model_predictions(self):
+        """get model predictions"""
+        query = "SELECT date FROM prediction WHERE prediction = 1"
+        result = self.__db_connection.fetch(query)
+        return result
+
+    def get_model_predictions_by_day(self, date):
         """get model predictions"""
         query = "SELECT prediction FROM prediction WHERE date = %s"
         result = self.__db_connection.fetch(query, (date,))

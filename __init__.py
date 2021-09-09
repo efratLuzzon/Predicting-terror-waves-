@@ -124,12 +124,12 @@ class AnomaliesApi(Resource):
 class ModelDateResultApi(Resource):
     def get(self):
         try:
-            year_prediction = request.args.get("year_prediction")
+            day_prediction = request.args.get("day_prediction")
             year_acc = request.args.get("year_accuracy")
-            if year_prediction is not None and year_acc is not None:
+            if day_prediction is not None and year_acc is not None:
                 return Response(status=404)
-            elif year_prediction is not None:
-                result = db_queries.get_model_date_prediction(year_prediction)
+            elif day_prediction is not None:
+                result = db_queries.get_model_predictions_by_day(day_prediction)
                 resp = jsonify(result)
                 resp.status_code = 200
                 return resp
@@ -339,17 +339,6 @@ class AttacksInfoApi(Resource):
             return Response(status=404)
 
 
-class ModelPredictionsApi(Resource):
-    def get(self):
-        try:
-            year = request.args.get('year')
-            result = db_queries.get_model_predictions(year)
-            resp = jsonify(result)
-            resp.status_code = 200
-            return resp
-        except Exception as e:
-            return Response(status=404)
-
 
 
 
@@ -371,7 +360,6 @@ api.add_resource(GoogleTrendsPalestineApi, '/GoogleTrendsPalestine')
 api.add_resource(ElectionsApi, '/Elections')
 api.add_resource(HolidaysApi, '/Holidays')
 api.add_resource(AttacksInfoApi, '/AttacksInfo')
-api.add_resource(ModelPredictionsApi, '/ModelPredictions')
 
 if __name__ == "__main__":
     app.run(threaded=True)
