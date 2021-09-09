@@ -11,9 +11,7 @@ from DB.XGBModelQueries import XGBModelQueries
 from DataFrameCalender import DataFrameCalender
 from ML_Models.XgbClassification import XgbClassification
 
-
 app = Flask(__name__)
-
 
 api = Api(app)
 db_queries = XGBModelQueries()
@@ -218,8 +216,11 @@ class FeaturesApi(Resource):
             for f, v in map_score.items():
                 map_score[f] = (v / sum_score) * 100
             map_score = sorted(map_score.items(), key=lambda x: x[1], reverse=True)
-
-            resp = jsonify(map_score[:15])
+            # pretty json
+            pretty_map = {}
+            for tuple_f in map_score[:15]:
+                pretty_map[tuple_f[0]] = tuple_f[1]
+            resp = jsonify(pretty_map)
             resp.status_code = 200
             return resp
         except Exception as e:
@@ -347,9 +348,6 @@ class ModelPredictionsApi(Resource):
             return resp
         except Exception as e:
             return Response(status=404)
-
-
-
 
 
 # Setup the Api resource routing
