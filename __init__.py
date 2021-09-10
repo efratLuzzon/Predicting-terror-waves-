@@ -92,14 +92,17 @@ class ModelDataApi(Resource):
 
 class AnomaliesApi(Resource):
     def get(self):
-        error = ''
-        try:
-            result = db_queries.get_anomaly_detection()
-            resp = jsonify(result)
-            resp.status_code = 200
-            return resp
-        except Exception as e:
-            return Response(status=404)
+        #error = ''
+        for i in range(10):
+            try:
+                result = db_queries.get_anomaly_detection()
+                resp = jsonify(result)
+                resp.status_code = 200
+                return resp
+            except Exception as e:
+                #return Response(status=404)
+                pass
+        return Response(status=404)
 
     def post(self):
         """re-train anomalies"""
@@ -251,92 +254,127 @@ class UploadFilesApi(Resource):
 
 class WeatherApi(Resource):
     def get(self):
-        try:
-            start_date = request.args.get('startDate')
-            end_date = request.args.get('endDate')
-            result = db_queries.get_weather_between_dates(start_date, end_date)
-            resp = jsonify(result)
-            resp.status_code = 200
-            return resp
-        except Exception as e:
-            return Response(status=404)
+        for i in range(10):
+            try:
+                start_date = request.args.get('startDate')
+                end_date = request.args.get('endDate')
+                result = db_queries.get_weather_between_dates(start_date, end_date)
+                resp = jsonify(result)
+                resp.status_code = 200
+                return resp
+            except Exception as e:
+                #return Response(status=404)
+                pass
+        return Response(status=404)
 
 
 class AttacksApi(Resource):
     def get(self):
-        try:
-            start_date = request.args.get('startDate')
-            end_date = request.args.get('endDate')
-            result = db_queries.get_attacks_between_dates(start_date, end_date)
-            resp = jsonify(result)
-            resp.status_code = 200
-            return resp
-        except Exception as e:
-            return Response(status=404)
+        for i in range(10):
+            try:
+                start_date = request.args.get('startDate')
+                end_date = request.args.get('endDate')
+                result = db_queries.get_attacks_between_dates(start_date, end_date)
+                resp = jsonify(result)
+                resp.status_code = 200
+                return resp
+            except Exception as e:
+                #return Response(status=404)
+                pass
+        return Response(status=404)
 
 
 class GoogleTrendsIsraelApi(Resource):
     def get(self):
-        try:
-            start_date = request.args.get('startDate')
-            end_date = request.args.get('endDate')
-            result = db_queries.get_google_trends_israel_between_dates(start_date, end_date)
-            resp = jsonify(result)
-            resp.status_code = 200
-            return resp
-        except Exception as e:
-            return Response(status=404)
+        for i in range(10):
+            try:
+                start_date = request.args.get('startDate')
+                end_date = request.args.get('endDate')
+                result = db_queries.get_google_trends_israel_between_dates(start_date, end_date)
+                resp = jsonify(result)
+                resp.status_code = 200
+                return resp
+            except Exception as e:
+                #return Response(status=404)
+                pass
+        return Response(status=404)
 
 
 class GoogleTrendsPalestineApi(Resource):
     def get(self):
-        try:
-            start_date = request.args.get('startDate')
-            end_date = request.args.get('endDate')
-            result = db_queries.get_google_trends_palestine_between_dates(start_date, end_date)
-            resp = jsonify(result)
-            resp.status_code = 200
-            return resp
-        except Exception as e:
-            return Response(status=404)
+        for i in range(10):
+            try:
+                start_date = request.args.get('startDate')
+                end_date = request.args.get('endDate')
+                result = db_queries.get_google_trends_palestine_between_dates(start_date, end_date)
+                resp = jsonify(result)
+                resp.status_code = 200
+                return resp
+            except Exception as e:
+                #return Response(status=404)
+                pass
+        return Response(status=404)
 
 
 class ElectionsApi(Resource):
     def get(self):
-        try:
-            start_date = request.args.get('startDate')
-            end_date = request.args.get('endDate')
-            result = db_queries.get_elections_date_between_dates(start_date, end_date)
-            resp = jsonify(result)
-            resp.status_code = 200
-            return resp
-        except Exception as e:
-            return Response(status=404)
+        for i in range(10):
+            try:
+                start_date = request.args.get('startDate')
+                end_date = request.args.get('endDate')
+                result = db_queries.get_elections_date_between_dates(start_date, end_date)
+                resp = jsonify(result)
+                resp.status_code = 200
+                return resp
+            except Exception as e:
+                #return Response(status=404)
+                pass
+        return Response(status=404)
 
 
 class HolidaysApi(Resource):
     def get(self):
-        try:
-            start_date = request.args.get('startDate')
-            end_date = request.args.get('endDate')
-            result = db_queries.get_holidays_between_dates(start_date, end_date)
-            resp = jsonify(result)
-            resp.status_code = 200
-            return resp
-        except Exception as e:
-            return Response(status=404)
+        for i in range(10):
+            try:
+                start_date = request.args.get('startDate')
+                end_date = request.args.get('endDate')
+                result = db_queries.get_holidays_between_dates(start_date, end_date)
+                resp = jsonify(result)
+                resp.status_code = 200
+                return resp
+            except Exception as e:
+                #return Response(status=404)
+                pass
+        return Response(status=404)
 
 
 class AttacksInfoApi(Resource):
     def get(self):
-        try:
-            date = request.args.get('date')
-            result = db_queries.get_attacks_info_by_date(date)
-            resp = jsonify(result)
-            resp.status_code = 200
-            return resp
-        except Exception as e:
-            return Response(status=404)
+        for i in range(10):
+            try:
+                date = request.args.get('date')
+                result = db_queries.get_attacks_info_by_date(date)
+                resp = jsonify(result)
+                resp.status_code = 200
+                return resp
+            except Exception as e:
+                #return Response(status=404)
+                pass
+        return Response(status=404)
+
+
+class ModelPredictionsApi(Resource):
+    def get(self):
+        for i in range(10):
+            try:
+                result = db_queries.get_model_predictions()
+                resp = jsonify(result)
+                resp.status_code = 200
+                return resp
+            except Exception as e:
+                #return Response(status=404)
+                pass
+        return Response(status=404)
 
 
 
@@ -360,6 +398,7 @@ api.add_resource(GoogleTrendsPalestineApi, '/GoogleTrendsPalestine')
 api.add_resource(ElectionsApi, '/Elections')
 api.add_resource(HolidaysApi, '/Holidays')
 api.add_resource(AttacksInfoApi, '/AttacksInfo')
+api.add_resource(ModelPredictionsApi, '/ModelPredictions')
 
 if __name__ == "__main__":
     app.run(threaded=True)
