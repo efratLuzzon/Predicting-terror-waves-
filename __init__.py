@@ -382,8 +382,21 @@ class AttacksInfoApi(Resource):
         return Response(status=404)
 
 
-class ModelPredictionsApi(Resource):
+class AllPredictionsApi(Resource):
+    def get(self):
+        for i in range(10):
+            try:
+                result = db_queries.get_model_predictions()
+                resp = jsonify(result)
+                resp.status_code = 200
+                return resp
+            except Exception as e:
+                # return Response(status=404)
+                pass
+        return Response(status=404)
 
+
+class ModelPredictionsApi(Resource):
     def get(self):
         for i in range(10):
             try:
@@ -406,6 +419,7 @@ class ModelPredictionsApi(Resource):
                 pass
         return Response(status=404)
 
+
 # Setup the Api resource routing
 api.add_resource(LoginApi, '/Login')
 api.add_resource(ModelDataApi, '/ModelData')
@@ -423,6 +437,7 @@ api.add_resource(GoogleTrendsPalestineApi, '/GoogleTrendsPalestine')
 api.add_resource(ElectionsApi, '/Elections')
 api.add_resource(HolidaysApi, '/Holidays')
 api.add_resource(AttacksInfoApi, '/AttacksInfo')
+api.add_resource(AllPredictionsApi, '/AllPredictions')
 api.add_resource(ModelPredictionsApi, '/ModelPredictions')
 
 if __name__ == "__main__":
