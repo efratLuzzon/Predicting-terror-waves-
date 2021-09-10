@@ -11,9 +11,7 @@ from DB.XGBModelQueries import XGBModelQueries
 from DataFrameCalender import DataFrameCalender
 from ML_Models.XgbClassification import XgbClassification
 
-
 app = Flask(__name__)
-
 
 api = Api(app)
 db_queries = XGBModelQueries()
@@ -21,32 +19,41 @@ db_queries = XGBModelQueries()
 
 class LoginApi(Resource):
     def post(self):
-        error = ''
-        try:
-            username = request.json['username']
-            password = request.json['password']
-            resp = db_queries.login(username, password)
-            if (len(resp) > 0):
-                if resp[0]["password"] == password:
-                    return Response(status=200)
-                else:
-                    error = "Invalid credentials. Try Again."
-                    return Response(status=404)
-        except Exception as e:
-            return Response(status=404)
+        for i in range(10):
+
+            error = ''
+            try:
+                username = request.json['username']
+                password = request.json['password']
+                resp = db_queries.login(username, password)
+                if (len(resp) > 0):
+                    if resp[0]["password"] == password:
+                        return Response(status=200)
+                    else:
+                        error = "Invalid credentials. Try Again."
+                        return Response(status=404)
+            except Exception as e:
+                pass
+                #return Response(status=404)
+        return Response(status=404)
 
 
 class ModelDataApi(Resource):
+
+
     def get(self):
         error = ''
-        try:
-            year = request.args.get("year")
-            result = db_queries.get_model_data() if year is "all" else db_queries.get_model_data_per_date(year)
-            resp = jsonify(result)
-            resp.status_code = 200
-            return resp
-        except Exception as e:
-            return Response(status=404)
+        for i in range(10):
+            try:
+                year = request.args.get("year")
+                result = db_queries.get_model_data() if year is "all" else db_queries.get_model_data_per_date(year)
+                resp = jsonify(result)
+                resp.status_code = 200
+                return resp
+            except Exception as e:
+                pass
+        return Response(status=404)
+
 
     def post(self):
         error = ''
@@ -92,7 +99,7 @@ class ModelDataApi(Resource):
 
 class AnomaliesApi(Resource):
     def get(self):
-        #error = ''
+        # error = ''
         for i in range(10):
             try:
                 result = db_queries.get_anomaly_detection()
@@ -100,7 +107,7 @@ class AnomaliesApi(Resource):
                 resp.status_code = 200
                 return resp
             except Exception as e:
-                #return Response(status=404)
+                # return Response(status=404)
                 pass
         return Response(status=404)
 
@@ -126,24 +133,27 @@ class AnomaliesApi(Resource):
 
 class ModelDateResultApi(Resource):
     def get(self):
-        try:
-            day_prediction = request.args.get("day_prediction")
-            year_acc = request.args.get("year_accuracy")
-            if day_prediction is not None and year_acc is not None:
+        for i in range(10):
+
+            try:
+                day_prediction = request.args.get("day_prediction")
+                year_acc = request.args.get("year_accuracy")
+                if day_prediction is not None and year_acc is not None:
+                    return Response(status=404)
+                elif day_prediction is not None:
+                    result = db_queries.get_model_predictions_by_day(day_prediction)
+                    resp = jsonify(result)
+                    resp.status_code = 200
+                    return resp
+                elif year_acc is not None:
+                    result = db_queries.get_model_accuracy(year_acc)
+                    resp = jsonify(result)
+                    resp.status_code = 200
+                    return resp
                 return Response(status=404)
-            elif day_prediction is not None:
-                result = db_queries.get_model_predictions_by_day(day_prediction)
-                resp = jsonify(result)
-                resp.status_code = 200
-                return resp
-            elif year_acc is not None:
-                result = db_queries.get_model_accuracy(year_acc)
-                resp = jsonify(result)
-                resp.status_code = 200
-                return resp
-            return Response(status=404)
-        except Exception as e:
-            return Response(status=404)
+            except Exception as e:
+                pass
+        return Response(status=404)
 
     def post(self):
         test_year = request.json['test_year']
@@ -179,56 +189,65 @@ class ModelDateResultApi(Resource):
 
 class ConfusionMatrix(Resource):
     def get(self):
-        error = ''
-        try:
-            year = request.args.get("year")
-            result = db_queries.get_confusion_matrix(year)
-            resp = jsonify(result)
-            resp.status_code = 200
-            return resp
-        except Exception as e:
-            return Response(status=404)
+        for i in range(10):
+
+            error = ''
+            try:
+                year = request.args.get("year")
+                result = db_queries.get_confusion_matrix(year)
+                resp = jsonify(result)
+                resp.status_code = 200
+                return resp
+            except Exception as e:
+                pass
+        return Response(status=404)
 
 
 class HyperparmetersApi(Resource):
     def get(self):
-        error = ''
-        try:
-            year = request.args.get("year")
-            result = db_queries.get_hyperparameters(year)
-            resp = jsonify(result)
-            resp.status_code = 200
-            return resp
-        except Exception as e:
-            return Response(status=404)
+        for i in range(10):
+
+            error = ''
+            try:
+                year = request.args.get("year")
+                result = db_queries.get_hyperparameters(year)
+                resp = jsonify(result)
+                resp.status_code = 200
+                return resp
+            except Exception as e:
+                pass
+        return Response(status=404)
 
 
 class FeaturesApi(Resource):
     def get(self):
-        error = ''
-        try:
-            year = request.args.get("year")
-            result = db_queries.get_features(year)
-            features = pd.DataFrame(result).loc[0].drop("year")
-            map_score = {}
-            for _, (indx, val) in enumerate(features.iteritems()):
-                feature = indx.split("(")[0]
-                if feature in map_score:
-                    map_score[feature] += val
-                else:
-                    map_score[feature] = val
-            sum_score = sum(map_score.values())
-            for f, v in map_score.items():
-                map_score[f] = (v / sum_score) * 100
-            map_score = sorted(map_score.items(), key=lambda x: x[1], reverse=True)
-            pretty_map = {}
-            for tuple_f in map_score[:15]:
-                pretty_map[tuple_f[0]] = tuple_f[1]
-            resp = jsonify(pretty_map)
-            resp.status_code = 200
-            return resp
-        except Exception as e:
-            return Response(status=404)
+        for i in range(10):
+
+            error = ''
+            try:
+                year = request.args.get("year")
+                result = db_queries.get_features(year)
+                features = pd.DataFrame(result).loc[0].drop("year")
+                map_score = {}
+                for _, (indx, val) in enumerate(features.iteritems()):
+                    feature = indx.split("(")[0]
+                    if feature in map_score:
+                        map_score[feature] += val
+                    else:
+                        map_score[feature] = val
+                sum_score = sum(map_score.values())
+                for f, v in map_score.items():
+                    map_score[f] = (v / sum_score) * 100
+                map_score = sorted(map_score.items(), key=lambda x: x[1], reverse=True)
+                pretty_map = {}
+                for tuple_f in map_score[:15]:
+                    pretty_map[tuple_f[0]] = tuple_f[1]
+                resp = jsonify(pretty_map)
+                resp.status_code = 200
+                return resp
+            except Exception as e:
+                pass
+        return Response(status=404)
 
 
 class TestApi(Resource):
@@ -263,7 +282,7 @@ class WeatherApi(Resource):
                 resp.status_code = 200
                 return resp
             except Exception as e:
-                #return Response(status=404)
+                # return Response(status=404)
                 pass
         return Response(status=404)
 
@@ -279,7 +298,7 @@ class AttacksApi(Resource):
                 resp.status_code = 200
                 return resp
             except Exception as e:
-                #return Response(status=404)
+                # return Response(status=404)
                 pass
         return Response(status=404)
 
@@ -295,7 +314,7 @@ class GoogleTrendsIsraelApi(Resource):
                 resp.status_code = 200
                 return resp
             except Exception as e:
-                #return Response(status=404)
+                # return Response(status=404)
                 pass
         return Response(status=404)
 
@@ -311,7 +330,7 @@ class GoogleTrendsPalestineApi(Resource):
                 resp.status_code = 200
                 return resp
             except Exception as e:
-                #return Response(status=404)
+                # return Response(status=404)
                 pass
         return Response(status=404)
 
@@ -327,7 +346,7 @@ class ElectionsApi(Resource):
                 resp.status_code = 200
                 return resp
             except Exception as e:
-                #return Response(status=404)
+                # return Response(status=404)
                 pass
         return Response(status=404)
 
@@ -343,7 +362,7 @@ class HolidaysApi(Resource):
                 resp.status_code = 200
                 return resp
             except Exception as e:
-                #return Response(status=404)
+                # return Response(status=404)
                 pass
         return Response(status=404)
 
@@ -358,36 +377,34 @@ class AttacksInfoApi(Resource):
                 resp.status_code = 200
                 return resp
             except Exception as e:
-                #return Response(status=404)
+                # return Response(status=404)
                 pass
         return Response(status=404)
 
 
 class ModelPredictionsApi(Resource):
+
     def get(self):
         for i in range(10):
             try:
-                result = db_queries.get_model_predictions()
-                resp = jsonify(result)
-                resp.status_code = 200
-                return resp
+                day_prediction = request.args.get("day_prediction")
+                year_acc = request.args.get("year_accuracy")
+                if day_prediction is not None and year_acc is not None:
+                    return Response(status=404)
+                elif day_prediction is not None:
+                    result = db_queries.get_model_predictions_by_day(day_prediction)
+                    resp = jsonify(result)
+                    resp.status_code = 200
+                    return resp
+                elif year_acc is not None:
+                    result = db_queries.get_model_accuracy(year_acc)
+                    resp = jsonify(result)
+                    resp.status_code = 200
+                    return resp
+                return Response(status=404)
             except Exception as e:
-                #return Response(status=404)
                 pass
         return Response(status=404)
-
-
-class TerrorWavesInfoApi(Resource):
-    def get(self):
-        try:
-            result = db_queries.get_terror_waves_info()
-            resp = jsonify(result)
-            resp.status_code = 200
-            return resp
-        except Exception as e:
-            return Response(status=404)
-
-
 
 # Setup the Api resource routing
 api.add_resource(LoginApi, '/Login')
