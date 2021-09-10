@@ -377,7 +377,15 @@ class ModelPredictionsApi(Resource):
         return Response(status=404)
 
 
-
+class TerrorWavesInfoApi(Resource):
+    def get(self):
+        try:
+            result = db_queries.get_terror_waves_info()
+            resp = jsonify(result)
+            resp.status_code = 200
+            return resp
+        except Exception as e:
+            return Response(status=404)
 
 
 
