@@ -68,7 +68,7 @@ class XGBModelQueries():
 
     def get_hyperparameters(self, year):
         """get hyperparams for trained model by year"""
-        query = "SELECT * FROM hyperparameters WHERE year=%s"
+        query = "SELECT * FROM hyperparams WHERE year=%s"
         result = self.__db_connection.fetch(query, (year,))
         return result
 
