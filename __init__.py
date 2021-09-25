@@ -452,6 +452,8 @@ api.add_resource(HolidaysApi, '/Holidays')
 api.add_resource(AttacksInfoApi, '/AttacksInfo')
 api.add_resource(AllPredictionsApi, '/AllPredictions')
 api.add_resource(ModelPredictionsApi, '/ModelPredictions')
+api.add_resource(TerrorWavesInfoApi, '/TerrorWavesInfo')
+
 
 if __name__ == "__main__":
     app.run(threaded=True)
