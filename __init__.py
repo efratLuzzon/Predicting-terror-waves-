@@ -1,8 +1,6 @@
 import base64
 import os
 import pickle
-from time import sleep
-
 import pandas as pd
 from flask import Flask, request, Response, jsonify
 from flask_restful import Api, Resource
@@ -12,16 +10,13 @@ from DataFrameCalender import DataFrameCalender
 from ML_Models.XgbClassification import XgbClassification
 
 app = Flask(__name__)
-
 api = Api(app)
 db_queries = XGBModelQueries()
 
 
 class LoginApi(Resource):
     def post(self):
-        for i in range(10):
-
-            error = ''
+        for i in range(100):
             try:
                 username = request.json['username']
                 password = request.json['password']
@@ -34,16 +29,12 @@ class LoginApi(Resource):
                         return Response(status=404)
             except Exception as e:
                 pass
-                #return Response(status=404)
         return Response(status=404)
 
 
 class ModelDataApi(Resource):
-
-
     def get(self):
-        error = ''
-        for i in range(10):
+        for i in range(100):
             try:
                 year = request.args.get("year")
                 result = db_queries.get_model_data() if year is "all" else db_queries.get_model_data_per_date(year)
@@ -54,9 +45,7 @@ class ModelDataApi(Resource):
                 pass
         return Response(status=404)
 
-
     def post(self):
-        error = ''
         try:
             for i in range(len(request.files)):
                 file = request.files[str(i)]
@@ -99,15 +88,13 @@ class ModelDataApi(Resource):
 
 class AnomaliesApi(Resource):
     def get(self):
-        # error = ''
-        for i in range(10):
+        for i in range(100):
             try:
                 result = db_queries.get_anomaly_detection()
                 resp = jsonify(result)
                 resp.status_code = 200
                 return resp
             except Exception as e:
-                # return Response(status=404)
                 pass
         return Response(status=404)
 
@@ -133,8 +120,7 @@ class AnomaliesApi(Resource):
 
 class ModelDateResultApi(Resource):
     def get(self):
-        for i in range(10):
-
+        for i in range(100):
             try:
                 day_prediction = request.args.get("day_prediction")
                 year_acc = request.args.get("year_accuracy")
@@ -189,9 +175,7 @@ class ModelDateResultApi(Resource):
 
 class ConfusionMatrix(Resource):
     def get(self):
-        for i in range(10):
-
-            error = ''
+        for i in range(100):
             try:
                 year = request.args.get("year")
                 result = db_queries.get_confusion_matrix(year)
@@ -205,9 +189,7 @@ class ConfusionMatrix(Resource):
 
 class HyperparmetersApi(Resource):
     def get(self):
-        for i in range(10):
-
-            error = ''
+        for i in range(100):
             try:
                 year = request.args.get("year")
                 result = db_queries.get_hyperparameters(year)
@@ -221,9 +203,7 @@ class HyperparmetersApi(Resource):
 
 class FeaturesApi(Resource):
     def get(self):
-        for i in range(10):
-
-            error = ''
+        for i in range(100):
             try:
                 year = request.args.get("year")
                 result = db_queries.get_features(year)
@@ -273,7 +253,7 @@ class UploadFilesApi(Resource):
 
 class WeatherApi(Resource):
     def get(self):
-        for i in range(10):
+        for i in range(100):
             try:
                 start_date = request.args.get('startDate')
                 end_date = request.args.get('endDate')
@@ -282,14 +262,13 @@ class WeatherApi(Resource):
                 resp.status_code = 200
                 return resp
             except Exception as e:
-                # return Response(status=404)
                 pass
         return Response(status=404)
 
 
 class AttacksApi(Resource):
     def get(self):
-        for i in range(10):
+        for i in range(100):
             try:
                 start_date = request.args.get('startDate')
                 end_date = request.args.get('endDate')
@@ -298,14 +277,13 @@ class AttacksApi(Resource):
                 resp.status_code = 200
                 return resp
             except Exception as e:
-                # return Response(status=404)
                 pass
         return Response(status=404)
 
 
 class GoogleTrendsIsraelApi(Resource):
     def get(self):
-        for i in range(10):
+        for i in range(100):
             try:
                 start_date = request.args.get('startDate')
                 end_date = request.args.get('endDate')
@@ -314,14 +292,13 @@ class GoogleTrendsIsraelApi(Resource):
                 resp.status_code = 200
                 return resp
             except Exception as e:
-                # return Response(status=404)
                 pass
         return Response(status=404)
 
 
 class GoogleTrendsPalestineApi(Resource):
     def get(self):
-        for i in range(10):
+        for i in range(100):
             try:
                 start_date = request.args.get('startDate')
                 end_date = request.args.get('endDate')
@@ -330,14 +307,13 @@ class GoogleTrendsPalestineApi(Resource):
                 resp.status_code = 200
                 return resp
             except Exception as e:
-                # return Response(status=404)
                 pass
         return Response(status=404)
 
 
 class ElectionsApi(Resource):
     def get(self):
-        for i in range(10):
+        for i in range(100):
             try:
                 start_date = request.args.get('startDate')
                 end_date = request.args.get('endDate')
@@ -346,14 +322,13 @@ class ElectionsApi(Resource):
                 resp.status_code = 200
                 return resp
             except Exception as e:
-                # return Response(status=404)
                 pass
         return Response(status=404)
 
 
 class HolidaysApi(Resource):
     def get(self):
-        for i in range(10):
+        for i in range(100):
             try:
                 start_date = request.args.get('startDate')
                 end_date = request.args.get('endDate')
@@ -362,14 +337,13 @@ class HolidaysApi(Resource):
                 resp.status_code = 200
                 return resp
             except Exception as e:
-                # return Response(status=404)
                 pass
         return Response(status=404)
 
 
 class AttacksInfoApi(Resource):
     def get(self):
-        for i in range(10):
+        for i in range(100):
             try:
                 date = request.args.get('date')
                 result = db_queries.get_attacks_info_by_date(date)
@@ -377,29 +351,26 @@ class AttacksInfoApi(Resource):
                 resp.status_code = 200
                 return resp
             except Exception as e:
-                # return Response(status=404)
                 pass
         return Response(status=404)
 
 
 class AllPredictionsApi(Resource):
     def get(self):
-        for i in range(10):
+        for i in range(100):
             try:
                 result = db_queries.get_model_predictions()
                 resp = jsonify(result)
                 resp.status_code = 200
                 return resp
             except Exception as e:
-                # return Response(status=404)
                 pass
         return Response(status=404)
 
 
 class ModelPredictionsApi(Resource):
-
     def get(self):
-        for i in range(10):
+        for i in range(100):
             try:
                 day_prediction = request.args.get("day_prediction")
                 year_acc = request.args.get("year_accuracy")
@@ -430,7 +401,6 @@ class TerrorWavesInfoApi(Resource):
             return resp
         except Exception as e:
             return Response(status=404)
-
 
 
 # Setup the Api resource routing
