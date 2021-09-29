@@ -36,13 +36,13 @@ class XGBGridSearchCV():
 
         model.update_params_model(default_value)
         for param in params:
-            train_x, train_y = model.__train_data_model.iloc[:, :-1], model.__train_data_model.iloc[:, -1]
-            split_time_series = TimeSeriesSplit(max_train_size=None, n_splits=model.__num_split_cross_validation).split(
+            train_x, train_y = model.train_data_model.iloc[:, :-1], model.train_data_model.iloc[:, -1]
+            split_time_series = TimeSeriesSplit(max_train_size=None, n_splits=model.num_split_cross_validation).split(
                 train_x)
             hyper_params = model.get_hyperparams()
             gsearch1 = GridSearchCV(
-                estimator=xgb.XGBClassifier(nthread=-1, objective=model.__objective, **hyper_params),
-                param_grid=param, cv=split_time_series, scoring=make_scorer(model.__score_function), n_jobs=-1)
+                estimator=xgb.XGBClassifier(nthread=-1, objective=model.objective, **hyper_params),
+                param_grid=param, cv=split_time_series, scoring=make_scorer(model.score_function), n_jobs=-1)
             gsearch1.fit(train_x, train_y)
             print(gsearch1.best_params_, gsearch1.best_score_)
             model.update_params_model(gsearch1.best_params_)

@@ -31,7 +31,6 @@ class XgbClassification():
         self.__metric = None
         self.__score_function = None
         self.__objective = None
-        self.__train_data_model = None
         self.__train_model = None
         self.__mode = mode
         self.__max_depth = None
@@ -50,13 +49,30 @@ class XgbClassification():
         self.__year_test = year_test
         self.set_mode_xgb_parameters()
 
+    @property
+    def train_data_model(self):
+        return self.__train_data_model
+
+    @property
+    def num_split_cross_validation(self):
+        return self.__num_split_cross_validation
+
+    @property
+    def objective(self):
+        return self.__objective
+
+    @property
+    def score_function(self):
+        return self.__score_function
+
     def get_confusion_matrix_model(self, predictions):
         """get confusion matrix"""
         test_y = self.__test_model.iloc[:, -1].values
         confusion_matrix_normalize = pd.crosstab(test_y, predictions, rownames=['original'], colnames=['Predicted'],
                                                  normalize=True)
-        confusion_matrix_with_type = pd.DataFrame(columns=["year", "TP", "FP", "FN", "TN"], data=[[self.__year_test, 0, 0, 0, 0]], index=[0])
-        dtype0 = {"year" : np.int64, "TP" : np.float64, "FP" : np.float64, "FN" : np.float64, "TN" : np.float64}
+        confusion_matrix_with_type = pd.DataFrame(columns=["year", "TP", "FP", "FN", "TN"],
+                                                  data=[[self.__year_test, 0, 0, 0, 0]], index=[0])
+        dtype0 = {"year": np.int64, "TP": np.float64, "FP": np.float64, "FN": np.float64, "TN": np.float64}
         confusion_matrix_with_type = confusion_matrix_with_type.astype(dtype0)
         try:
             confusion_matrix_with_type.at[0, "TP"] = confusion_matrix_normalize.iloc[0, 0]
@@ -172,7 +188,7 @@ class XgbClassification():
                 prev_feature_index += 1
         columns_name = data.index
         data = data.values.reshape(1, -1)
-        #data = np.insert(data, self.__year_test, -1)
+        # data = np.insert(data, self.__year_test, -1)
         data = pd.DataFrame(data=data, index=[self.__year_test for i in range(len(data))], columns=columns_name)
         feature_score = None
         if feature_score is None:
@@ -186,13 +202,13 @@ class XgbClassification():
         prediction_matrix = DataFrameCalender.create_empty_dates(calendar.SUNDAY, self.__year_test, self.__year_test)
         DataFrameCalender.set_date_time_index(prediction_matrix, 'date', prediction_matrix['date'])
         prediction_matrix['prediction'] = predictions
-        #prediction_matrix.drop('date', axis='columns', inplace=True)
+        # prediction_matrix.drop('date', axis='columns', inplace=True)
         return prediction_matrix
 
     def get_hyperparams_model(self):
         """get hyperparamters"""
         hyper_params = self.get_hyperparams()
-        update_hyper_params = {'year' : self.__year_test}
+        update_hyper_params = {'year': self.__year_test}
         update_hyper_params.update(hyper_params)
         hyper_params_df = pd.DataFrame(data=update_hyper_params, columns=update_hyper_params.keys(), index=[0])
         return hyper_params_df
@@ -207,15 +223,15 @@ class XgbClassification():
         xgb_model.split_model_by_n_last_days(data_suprived_model, (end_train - start_train).days + 1,
                                              (end_test - start_train).days + 1)
 
-        xgb_model.tuning_params_with_GridSearchCV()
+        xgb_model.tuning_model()
         accuracy_mean = xgb_model.cross_validation()
         accuracy, evals_result, get_num_boosting_rounds, predictions, original = xgb_model.train_and_validate_model()
         return accuracy, accuracy_mean, xgb_model, predictions
 
-
     def get_accuracy_result(self, accuracy_mean, accuracy):
         """get train and test results"""
-        result = pd.DataFrame(index=[0], columns=["year", "model_accuracy", "test_accuracy"], data=[[self.__year_test, accuracy_mean, accuracy]])
+        result = pd.DataFrame(index=[0], columns=["year", "model_accuracy", "test_accuracy"],
+                              data=[[self.__year_test, accuracy_mean, accuracy]])
         return result
 
     def set_mode_xgb_parameters(self):
@@ -361,5 +377,3 @@ class XgbClassification():
         start_test = date(year, 1, 1)
         end_test = date(year, 12, 31)
         return start_train, end_train, start_test, end_test
-
-

@@ -142,7 +142,7 @@ class ModelDateResultApi(Resource):
         return Response(status=404)
 
     def post(self):
-        test_year = request.json['test_year']
+        test_year = int(request.json['test_year'])
         try:
             data = db_queries.get_model_data()
             data = pd.DataFrame(data)
