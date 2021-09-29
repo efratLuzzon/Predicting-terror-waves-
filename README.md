@@ -1,1 +1,0 @@
-# Predicting-terror-waves-
